@@ -5,26 +5,37 @@ title: Basics
 
 ## File Structure
 
-* config.json
+* config.ini (optional)
 * index.js
 
-## `config.json` (optional)
+## `config.ini` (optional)
 
-The configuration file is just a JSON. It enables/disables features, and sets
-the window size (Linux/macOS/Windows).
+Rainbow will automatically read `config.ini` if there is one next to `index.js`.
+It enables/disables features, and sets the window size (on Linux/macOS/Windows).
 
-```json
-{
-  "$schema": "./rainbow-config.schema.json",
-  "accelerometer": true,
-  "allowHighDPI": false,
-  "msaa": 0,
-  "resolution": {
-    "width": 1280,
-    "height": 720
-  },
-  "suspendOnFocusLost": true
-}
+```ini
+[core]
+
+; Specifies the preferred screen resolution or window size. It also determines
+; whether we are in landscape or portrait mode. On smartphones/tablets, width
+; and height have no meaning as the whole screen will always be used.
+ResolutionWidth = 1920
+ResolutionHeight = 1080
+
+; Sets number of samples for multisample anti-aliasing. This feature is not
+; available on smartphones/tablets.
+MSAA = 4
+
+; Specifies whether to create windows in HiDPI mode. On smartphones and tablets,
+; this option is always `true`.
+AllowHiDPI = true
+
+; Specifies whether to suspend when focus is lost. This parameter is ignored on
+; smartphones/tablets.
+SuspendOnFocusLost = false
+
+; Specifies whether the accelerometer is used.
+Accelerometer = false
 ```
 
 ## Entry Point
