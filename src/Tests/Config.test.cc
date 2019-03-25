@@ -39,6 +39,15 @@ namespace
 
     constexpr char kInvalidConfig[] = "💩";
 
+    constexpr char kMissingValuesConfig[] =
+        "[core]\n"
+        "ResolutionWidth =\n"
+        "ResolutionHeight =\n"
+        "MSAA =\n"
+        "AllowHiDPI =\n"
+        "SuspendOnFocusLost =\n"
+        "Accelerometer =\n";
+
     constexpr char kSparseConfig[] =
         "[core]\n"
         "MSAA = 10\n"
@@ -191,4 +200,17 @@ TEST(ConfigTest, SparseConfiguration)
     ASSERT_FALSE(c.is_portrait());
     ASSERT_EQ(c.msaa(), 8u);
     ASSERT_FALSE(c.suspend());
+}
+
+TEST(ConfigTest, MissingValues)
+{
+    ScopedConfig conf(kMissingValuesConfig);
+    rainbow::Config config;
+
+    ASSERT_EQ(config.width(), 0);
+    ASSERT_EQ(config.height(), 0);
+    ASSERT_FALSE(config.hidpi());
+    ASSERT_FALSE(config.is_portrait());
+    ASSERT_EQ(config.msaa(), 0u);
+    ASSERT_TRUE(config.suspend());
 }

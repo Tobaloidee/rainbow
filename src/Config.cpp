@@ -42,9 +42,13 @@ namespace
         uint64_t accelerometer;
     };
 
-    constexpr auto is_enabled(std::string_view value)
+    template <typename F>
+    constexpr void with_bool(std::string_view value, F&& f)
     {
-        return value != "0"sv && value != "false"sv;
+        if (value.empty())
+            return;
+
+        f(value != "0"sv && value != "false"sv);
     }
 }  // namespace
 
@@ -101,10 +105,10 @@ rainbow::Config::Config()
             else if (hashed_key == keys.msaa)
                 msaa_ = floor_pow2(std::clamp(atoi(value.data()), 0, kMaxMSAA));
             else if (hashed_key == keys.allow_hidpi)
-                hidpi_ = is_enabled(value);
+                with_bool(value, [this](bool v) { hidpi_ = v; });
             else if (hashed_key == keys.suspend_on_focus_lost)
-                suspend_ = is_enabled(value);
+                with_bool(value, [this](bool v) { suspend_ = v; });
             else if (hashed_key == keys.accelerometer)
-                accelerometer_ = is_enabled(value);
+                with_bool(value, [this](bool v) { accelerometer_ = v; });
         });
 }
